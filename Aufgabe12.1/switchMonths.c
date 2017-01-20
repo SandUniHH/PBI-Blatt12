@@ -3,8 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define NUMBEROFMONTHS 12
-
 typedef enum
 {
   January,
@@ -21,28 +19,28 @@ typedef enum
   December
 } Month;
 
-bool is_leap_year(int year)
+int is_leap_year(int year)
 {
-  if ((jahreszahl % 4 == 0) && ((jahreszahl % 100 != 0) || (jahreszahl % 400 == 0)))
+  if ((year % 4 == 0) && ((year % 100 != 0) || (year % 400 == 0)))
   {
     return 1;
   }
   return 0;
 }
 
-int month_n_days(Month m, bool leap)
+int month_n_days(Month m, int leap)
 {
   int days;
   
   switch (m) 
   {
-    case 2:
+    case February:
       days = (leap ? 29 : 28);
       break;
-    case 4:
-    case 6:
-    case 9:
-    case 11:
+    case April:
+    case June:
+    case September:
+    case November:
       days = 30;
       break;
     default:
@@ -54,24 +52,26 @@ int month_n_days(Month m, bool leap)
 
 int main(int argc, char* argv[])
 {
-  bool leap;
-  int year, month, i;
-  char month_name[NUMBEROFMONTHS] = 
-  {
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  }
-  
+  int leap;
+  int year;
+  Month month;
+
+  // for translating the enum Month to the actual month names
+  const char* month_name[12];
+    month_name[0]  = "January";
+    month_name[1]  = "February";
+    month_name[2]  = "March";
+    month_name[3]  = "April";
+    month_name[4]  = "May";
+    month_name[5]  = "June";
+    month_name[6]  = "July";
+    month_name[7]  = "August";
+    month_name[8]  = "September";
+    month_name[9]  = "October";
+    month_name[10] = "November";
+    month_name[11] = "December";
+
+  // get and check the user input
   if (argc == 2) 
   {
     year = atoi(argv[1]);
@@ -82,13 +82,14 @@ int main(int argc, char* argv[])
     return (EXIT_FAILURE);
   }
   
-  if (year < 1582) printf("\n The year was before the introduction of the Gregorian calendar, so the output may be incorrect.\n");
+  if (year < 1582)
+    printf("\n The year was before the introduction of the Gregorian calendar, so the output may be incorrect.\n");
   
   leap = is_leap_year(year);
   
-  for (i = 0; i < NUMBEROFMONTHS; i++)
+  for (month = 0; month < 12; month++)
   {
-    printf("%s: %i", month_name[i], days);
+    printf("%s: %i\n", month_name[month], month_n_days(month, leap));
   }
 
   return (EXIT_SUCCESS);
